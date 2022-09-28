@@ -13,4 +13,10 @@ button.cell{
     border: none;
     width: 150px;
     aspect-ratio: 1/1;
+    display: grid;
+    place-content: center;
+    font-size: 40px;
+}
+button.cell i{
+    font-size: 1em;
 }
