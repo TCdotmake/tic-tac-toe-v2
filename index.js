@@ -9,6 +9,7 @@ function app(
             this.setupCells();
             this.setupBoardData();
             this.active = true;
+            this.winner = null;
         },
         setupCells: function(){
             const gameBoard = document.getElementById('gameBoard');
@@ -32,7 +33,6 @@ function app(
 
     function handleClick(e){
         ticTacToe.executeMove(e.target.dataset.cell);
-        console.log(ticTacToe.checkForWin());
     }
 
     const gameFlowFunctions = {
