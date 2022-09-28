@@ -36,10 +36,29 @@ function app() {
     ticTacToe.executeMove(e.target.dataset.cell);
   }
 
+  const gameBoardFunctions = {
+    isEmpty: function (cell) {
+      return cell === "";
+    },
+  };
+
   const aiFunctions = {
     aiMove: function () {
-      let cell = 0;
-      return cell;
+      let bestScore = -Infinity;
+      let index = -1;
+      for (let i = 0; i < this.board.length; i++) {
+        if (this.board[i] === "") {
+          this.board[i] = this.currentToken;
+          let score = this.minimax(this.board, 0, true, this.currentToken);
+          if (score > bestScore) {
+            bestScore = score;
+            index = i;
+            console.log(bestScore + " " + index);
+          }
+          this.board[i] = "";
+        }
+      }
+      return index;
     },
     getScore: function (endResult, maximizerToken) {
       if (endResult == 0) {
@@ -50,9 +69,43 @@ function app() {
         return -1;
       }
     },
-    minmax: function (board, depth, isMaxmizing, token) {
+    opponentToken: function (token) {
+      if (token === "1") {
+        return "2";
+      } else return "1";
+    },
+    minimax: function (board, depth, isMaxmizing, token) {
       let result = this.checkGameEnd(board);
       if (result !== null) {
+        let score = this.getScore(result, token);
+        console.log("board", board);
+        console.log("score", score);
+        return score;
+      }
+      if (isMaxmizing) {
+        let bestScore = -Infinity;
+
+        for (let i = 0; i < board.length; i++) {
+          if (board[i] === "") {
+            board[i] = token;
+            let score = this.minimax(board, depth + 1, false, token);
+            bestScore = Math.max(score, bestScore);
+            board[i] = "";
+          }
+        }
+        return bestScore;
+      } else {
+        let bestScore = Infinity;
+
+        for (let i = 0; i < board.length; i++) {
+          if (board[i] === "") {
+            board[i] = this.opponentToken(token);
+            let score = this.minimax(board, depth + 1, true, token);
+            bestScore = Math.min(score, bestScore);
+            board[i] = "";
+          }
+        }
+        return bestScore;
       }
     },
   };
@@ -128,7 +181,6 @@ function app() {
       } else if (!board.includes("")) {
         result = 0;
       } else result = null;
-      console.log(result);
       return result;
     },
   };
@@ -158,8 +210,13 @@ function app() {
       ...displayFunctions,
       ...gameEndMethods,
       ...aiFunctions,
+      ...gameBoardFunctions,
     };
   })();
   ticTacToe.initialSetup();
+  const aiBtn = document.getElementById("aiMove");
+  aiBtn.addEventListener("click", () => {
+    console.log(ticTacToe.aiMove());
+  });
 }
 app();
