@@ -32,7 +32,7 @@ function app(
 
     function handleClick(e){
         ticTacToe.executeMove(e.target.dataset.cell);
-        console.log(ticTacToe.board);
+        console.log(ticTacToe.checkForWin());
     }
 
     const gameFlowFunctions = {
@@ -50,13 +50,24 @@ function app(
                 this.board[index] = this.currentToken;
                 const cells = document.querySelectorAll('.cell');
                 cells[index].insertAdjacentElement("beforeend", this.createIcon());
-                this.nextTurn();
+                let result = this.checkForWin();
+                if(result!==null){this.gameEnd();}
+                if(this.active){
+                    this.nextTurn();
+                }
             }
         },
     }
 
     const gameEndMethods = {
-        matchThree: function(){},
+        gameEnd: function(){this.active = false;},
+        matchThree: function(a, b, c){
+            let result = null;
+            if(a===b && b===c && a!==''){
+                result = a;
+            }
+            return result;
+        },
         generateWinCondition: function(){
             this.winCondition = [];
             //rows
@@ -70,6 +81,13 @@ function app(
             //diagonal
             this.winCondition.push([0,4,8]);
             this.winCondition.push([2,4,6]);
+        },
+        checkForWin: function(){
+            for(cell of this.winCondition){
+                let result = this.matchThree(this.board[cell[0]], this.board[cell[1]], this.board[cell[2]]);
+                if(result!==null){return result;}
+            }
+            return null;
         }
     }
 
