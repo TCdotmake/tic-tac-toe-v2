@@ -5,16 +5,22 @@ function app() {
       this.newGame();
     },
     newGame: function () {
+      console.log("entered newGame()");
+      console.log(this);
       this.setupCells();
       this.setupBoardData();
       this.active = true;
     },
-    setupCells: function () {
+    clearCells: function () {
       const gameBoard = document.getElementById("gameBoard");
       //clear board if not empty
       while (gameBoard.firstChild) {
         gameBoard.remove(gameBoard.lastChild);
       }
+    },
+    setupCells: function () {
+      const gameBoard = document.getElementById("gameBoard");
+      this.clearCells();
       for (let i = 0; i < 9; i++) {
         let cell = document.createElement("button");
         cell.classList.add("cell");
@@ -193,6 +199,7 @@ function app() {
       player_2: createPlayer("2", "bi-circle"),
       currentToken: "1",
       currnetIcon: "bi-x-lg",
+      currentAI: false,
       active: true,
       ...setupFunctions,
       ...gameFlowFunctions,
@@ -209,6 +216,10 @@ function app() {
     console.log(ticTacToe.aiMove());
   });
   const ngBtn = document.getElementById("newGame");
-  ngBtn.addEventListener("click", ticTacToe.newGame);
+  ngBtn.addEventListener("click", () => {
+    ticTacToe.setupCells();
+    ticTacToe.setupBoardData();
+    ticTacToe.active = true;
+  });
 }
 app();
