@@ -237,7 +237,7 @@ function app() {
     };
   })();
   ticTacToe.initialSetup();
-  console.table(ticTacToe);
+
   const aiBtn2 = document.getElementById("aiToggle2");
   aiBtn2.addEventListener("click", () => {
     ticTacToe.toggleAI(2);

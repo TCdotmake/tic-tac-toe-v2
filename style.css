@@ -1,3 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+:root {
+  font-size: 16px;
+  --icon-font-size: 5rem;
+}
 #gameBoard {
   background: #000;
   width: fit-content;
@@ -14,7 +22,7 @@ button.cell {
   aspect-ratio: 1/1;
   display: grid;
   place-content: center;
-  font-size: 40px;
+  font-size: var(--icon-font-size);
 }
 button.cell i {
   font-size: 1em;
