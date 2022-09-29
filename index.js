@@ -5,11 +5,10 @@ function app() {
       this.newGame();
     },
     newGame: function () {
-      console.log("entered newGame()");
-      console.log(this);
       this.setupCells();
       this.setupBoardData();
       this.active = true;
+      this.firstTurn();
     },
     clearCells: function () {
       const gameBoard = document.getElementById("gameBoard");
@@ -48,6 +47,17 @@ function app() {
   };
 
   const aiFunctions = {
+    toggleAI: function (playerNum) {
+      if (playerNum == 1) {
+        this.player_1.ai = !this.player_1.ai;
+      }
+      if (playerNum == 2) {
+        this.player_2.ai = !this.player_2.ai;
+      }
+      if (this.currentToken == playerNum) {
+        this.executeMove(this.aiMove());
+      }
+    },
     aiMove: function () {
       return this.minimax(this.board, 0, true, this.currentToken).move;
     },
@@ -103,13 +113,30 @@ function app() {
   };
 
   const gameFlowFunctions = {
+    firstTurn: function () {
+      if (this.aiTurn()) {
+        this.executeMove(this.aiMove());
+      }
+    },
+    aiTurn: function () {
+      if (this.currentToken == 1) {
+        return this.player_1.ai;
+      }
+      if (this.currentToken == 2) {
+        return this.player_2.ai;
+      }
+    },
     nextTurn: function () {
+      let ai;
       if (this.currentToken === "1") {
         this.currentToken = this.player_2.token;
         this.currnetIcon = this.player_2.icon;
       } else {
         this.currentToken = this.player_1.token;
         this.currnetIcon = this.player_1.icon;
+      }
+      if (this.aiTurn()) {
+        this.executeMove(this.aiMove());
       }
     },
     executeMove: function (index) {
@@ -190,7 +217,7 @@ function app() {
   };
 
   function createPlayer(token, icon) {
-    return { token, icon };
+    return { token, icon, ai: false };
   }
 
   const ticTacToe = (function () {
@@ -211,9 +238,13 @@ function app() {
   })();
   ticTacToe.initialSetup();
   console.table(ticTacToe);
-  const aiBtn = document.getElementById("aiMove");
-  aiBtn.addEventListener("click", () => {
-    console.log(ticTacToe.aiMove());
+  const aiBtn2 = document.getElementById("aiToggle2");
+  aiBtn2.addEventListener("click", () => {
+    ticTacToe.toggleAI(2);
+  });
+  const aiBtn1 = document.getElementById("aiToggle1");
+  aiBtn1.addEventListener("click", () => {
+    ticTacToe.toggleAI(1);
   });
   const ngBtn = document.getElementById("newGame");
   ngBtn.addEventListener("click", () => {
