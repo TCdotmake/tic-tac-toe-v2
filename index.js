@@ -15,7 +15,7 @@ function app() {
       const gameBoard = document.getElementById("gameBoard");
       //clear board if not empty
       while (gameBoard.firstChild) {
-        gameBoard.remove(gameBoard.lastChild);
+        gameBoard.removeChild(gameBoard.lastChild);
       }
     },
     setupCells: function () {
@@ -217,9 +217,7 @@ function app() {
   });
   const ngBtn = document.getElementById("newGame");
   ngBtn.addEventListener("click", () => {
-    ticTacToe.setupCells();
-    ticTacToe.setupBoardData();
-    ticTacToe.active = true;
+    ticTacToe.newGame();
   });
 }
 app();
