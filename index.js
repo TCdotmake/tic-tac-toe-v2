@@ -8,7 +8,6 @@ function app() {
       this.setupCells();
       this.setupBoardData();
       this.active = true;
-      this.winner = null;
     },
     setupCells: function () {
       const gameBoard = document.getElementById("gameBoard");
@@ -44,18 +43,10 @@ function app() {
 
   const aiFunctions = {
     aiMove: function () {
-      return this.mmv2(this.board, 0, true, this.currentToken);
+      return this.minimax(this.board, 0, true, this.currentToken).move;
     },
+
     getScore: function (endResult, maximizerToken) {
-      if (endResult === 0) {
-        return endResult;
-      } else if (endResult === maximizerToken) {
-        return 1;
-      } else {
-        return -1;
-      }
-    },
-    getScorev2: function (endResult, maximizerToken) {
       if (endResult === 0) {
         return endResult;
       } else if (endResult === maximizerToken) {
@@ -69,44 +60,11 @@ function app() {
         return "2";
       } else return "1";
     },
-    minimax: function (board, isMaxmizing, token) {
+
+    minimax: function (board, depth, isMaxmizing, token) {
       let result = this.checkGameEnd(board);
       if (result !== null) {
-        let score = this.getScore(result, token);
-        // console.log("board", board);
-        // console.log("score", score);
-        return score;
-      }
-      if (isMaxmizing) {
-        let bestScore = -Infinity;
-
-        for (let i = 0; i < board.length; i++) {
-          if (board[i] === "") {
-            board[i] = token;
-            let score = this.minimax(board, false, token);
-            bestScore = Math.max(score, bestScore);
-            board[i] = "";
-          }
-        }
-        return bestScore;
-      } else {
-        let worstScore = Infinity;
-
-        for (let i = 0; i < board.length; i++) {
-          if (board[i] === "") {
-            board[i] = this.opponentToken(token);
-            let score = this.minimax(board, true, token);
-            worstScore = Math.min(score, worstScore);
-            board[i] = "";
-          }
-        }
-        return worstScore;
-      }
-    },
-    mmv2: function (board, depth, isMaxmizing, token) {
-      let result = this.checkGameEnd(board);
-      if (result !== null) {
-        let best = this.getScorev2(result, token) - depth;
+        let best = this.getScore(result, token) - depth;
         return { best };
       } else if (result === null) {
         let scoreArr = [];
@@ -117,10 +75,10 @@ function app() {
             moveArr.push(i);
             if (isMaxmizing) {
               board[i] = token;
-              scoreArr.push(this.mmv2(board, depth + 1, false, token).best);
+              scoreArr.push(this.minimax(board, depth + 1, false, token).best);
             } else {
               board[i] = this.opponentToken(token);
-              scoreArr.push(this.mmv2(board, depth + 1, true, token).best);
+              scoreArr.push(this.minimax(board, depth + 1, true, token).best);
             }
             board[i] = "";
           }
@@ -133,7 +91,7 @@ function app() {
         }
         // let index = scoreArr.indexOf(best);
         let move = moveArr[scoreArr.indexOf(best)];
-        return { best, move, moveArr, scoreArr };
+        return { best, move };
       }
     },
   };
@@ -245,10 +203,12 @@ function app() {
     };
   })();
   ticTacToe.initialSetup();
-  console.log("ticTacToe.winCondition", ticTacToe.winCondition);
+  console.table(ticTacToe);
   const aiBtn = document.getElementById("aiMove");
   aiBtn.addEventListener("click", () => {
     console.log(ticTacToe.aiMove());
   });
+  const ngBtn = document.getElementById("newGame");
+  ngBtn.addEventListener("click", ticTacToe.newGame);
 }
 app();
