@@ -142,15 +142,23 @@ function app() {
     executeMove: function (index) {
       if (this.board[index] === "" && this.active) {
         this.board[index] = this.currentToken;
+        //place visual token
         const cells = document.querySelectorAll(".cell");
-        cells[index].insertAdjacentElement("beforeend", this.createIcon());
-        let result = this.checkGameEnd(this.board);
-        if (result !== null) {
-          this.gameEnd();
+        cells[index].insertAdjacentElement("beforeend", this.createToken());
+        this.endTurn();
+      }
+    },
+    endTurn: function () {
+      let result = this.checkGameEnd(this.board);
+      if (result !== null) {
+        this.gameEnd();
+        if (result != 0) {
+          //highligh winning cells if not draw
+          this.showWinCells();
         }
-        if (this.active) {
-          this.nextTurn();
-        }
+      }
+      if (this.active) {
+        this.nextTurn();
       }
     },
   };
@@ -214,6 +222,70 @@ function app() {
       newIcon.classList.add(this.currnetIcon);
       return newIcon;
     },
+    createToken: function () {
+      const token = document.createElement("div");
+      token.classList.add("symbolWrapper");
+      let innerHTML;
+      if (this.currentToken == "1") {
+        innerHTML = `<div class="xSymbol">
+        <div class="bar deg45"></div>
+        <div class="bar deg315"></div>
+      </div>`;
+        let x = document.createElement("div");
+        x.classList.add("xSymbol");
+        let bar1 = document.createElement("div");
+        bar1.classList.add("bar");
+        bar1.classList.add("deg45");
+        let bar2 = document.createElement("div");
+        bar2.classList.add("bar");
+        bar2.classList.add("deg315");
+        x.insertAdjacentElement("beforeend", bar1);
+        x.insertAdjacentElement("beforeend", bar2);
+        token.insertAdjacentElement("beforeend", x);
+      } else {
+        innerHTML = `<div class="circleSymbol">
+        <div class="outer circle">
+          <div class="inner circle"></div>
+        </div>
+      </div>`;
+        let o = document.createElement("div");
+        o.classList.add("circleSymbol");
+        let outer = document.createElement("div");
+        outer.classList.add("circle");
+        outer.classList.add("outer");
+        let inner = document.createElement("div");
+        inner.classList.add("circle");
+        inner.classList.add("inner");
+        outer.insertAdjacentElement("beforeend", inner);
+        o.insertAdjacentElement("beforeend", outer);
+        token.insertAdjacentElement("beforeend", o);
+      }
+      // token.innerHTML = innerHTML;
+      return token;
+    },
+    getWinArr: function () {
+      for (cell of this.winCondition) {
+        result = this.matchThree(
+          this.board[cell[0]],
+          this.board[cell[1]],
+          this.board[cell[2]]
+        );
+        if (result !== null) {
+          return [...cell];
+        }
+      }
+      return [];
+    },
+    showWinCells: function () {
+      let winCells = this.getWinArr();
+      const cells = document.querySelectorAll(".cell");
+      for (index of winCells) {
+        const children = cells[index].firstChild.firstChild.children;
+        for (let child of children) {
+          child.classList.add("win");
+        }
+      }
+    },
   };
 
   function createPlayer(token, icon) {
@@ -238,17 +310,17 @@ function app() {
   })();
   ticTacToe.initialSetup();
 
-  const aiBtn2 = document.getElementById("aiToggle2");
-  aiBtn2.addEventListener("click", () => {
-    ticTacToe.toggleAI(2);
-  });
-  const aiBtn1 = document.getElementById("aiToggle1");
-  aiBtn1.addEventListener("click", () => {
-    ticTacToe.toggleAI(1);
-  });
-  const ngBtn = document.getElementById("newGame");
-  ngBtn.addEventListener("click", () => {
-    ticTacToe.newGame();
-  });
+  // const aiBtn2 = document.getElementById("aiToggle2");
+  // aiBtn2.addEventListener("click", () => {
+  //   ticTacToe.toggleAI(2);
+  // });
+  // const aiBtn1 = document.getElementById("aiToggle1");
+  // aiBtn1.addEventListener("click", () => {
+  //   ticTacToe.toggleAI(1);
+  // });
+  // const ngBtn = document.getElementById("newGame");
+  // ngBtn.addEventListener("click", () => {
+  //   ticTacToe.newGame();
+  // });
 }
 app();
