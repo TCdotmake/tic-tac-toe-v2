@@ -319,17 +319,17 @@ function app() {
   })();
   ticTacToe.initialSetup();
 
-  const aiBtn2 = document.getElementById("aiToggle2");
-  aiBtn2.addEventListener("click", () => {
-    ticTacToe.toggleAI(2);
-  });
-  const aiBtn1 = document.getElementById("aiToggle1");
-  aiBtn1.addEventListener("click", () => {
-    ticTacToe.toggleAI(1);
-  });
-  const ngBtn = document.getElementById("newGame");
-  ngBtn.addEventListener("click", () => {
-    ticTacToe.newGame();
-  });
+  // const aiBtn2 = document.getElementById("aiToggle2");
+  // aiBtn2.addEventListener("click", () => {
+  //   ticTacToe.toggleAI(2);
+  // });
+  // const aiBtn1 = document.getElementById("aiToggle1");
+  // aiBtn1.addEventListener("click", () => {
+  //   ticTacToe.toggleAI(1);
+  // });
+   const ngBtn = document.getElementById("new-game");
+   ngBtn.addEventListener("click", () => {
+     ticTacToe.newGame();
+   });
 }
 app();
