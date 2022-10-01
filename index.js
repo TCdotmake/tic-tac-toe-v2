@@ -65,7 +65,27 @@ function app() {
         this.executeMove(this.aiMove());
       }
     },
+    aiOn: function (playerNum) {
+      if (playerNum == 1) {
+        this.player_1.ai = true;
+      }
+      if (playerNum == 2) {
+        this.player_2.ai = true;
+      }
+      if (this.currentToken == playerNum) {
+        this.executeMove(this.aiMove());
+      }
+    },
+    aiOff: function (playerNum) {
+      if (playerNum == 1) {
+        this.player_1.ai = false;
+      }
+      if (playerNum == 2) {
+        this.player_2.ai = false;
+      }
+    },
     aiMove: function () {
+      setTimeout(()=>{console.log(this), 300});
       return this.minimax(this.board, 0, true, this.currentToken).move;
     },
 
@@ -318,18 +338,30 @@ function app() {
     };
   })();
   ticTacToe.initialSetup();
+  const ngBtn = document.getElementById("new-game");
+  ngBtn.addEventListener("click", () => {
+    ticTacToe.newGame();
+  });
+  const xCPU = document.getElementById("p1-ai");
+  const oCPU = document.getElementById("p2-ai");
+  const xLabel = document.getElementById('x-label');
+  const oLabel = document.getElementById('o-label');
 
-  // const aiBtn2 = document.getElementById("aiToggle2");
-  // aiBtn2.addEventListener("click", () => {
-  //   ticTacToe.toggleAI(2);
-  // });
-  // const aiBtn1 = document.getElementById("aiToggle1");
-  // aiBtn1.addEventListener("click", () => {
-  //   ticTacToe.toggleAI(1);
-  // });
-   const ngBtn = document.getElementById("new-game");
-   ngBtn.addEventListener("click", () => {
-     ticTacToe.newGame();
-   });
+  xCPU.addEventListener("change", (e) => {
+    if (e.target.checked) {
+      ticTacToe.aiOn(1);
+    } else {
+      ticTacToe.aiOff(1);
+    }
+    xLabel.classList.toggle('ai');
+  });
+  oCPU.addEventListener("change", (e) => {
+    if (e.target.checked) {
+      ticTacToe.aiOn(2);
+    } else {
+      ticTacToe.aiOff(2);
+    }
+    oLabel.classList.toggle('ai');
+  });
 }
 app();

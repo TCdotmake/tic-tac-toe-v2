@@ -10,7 +10,7 @@
   --board-bg: grey;
   --board-gap: 10px;
   --symbol-size: 90px;
-  --symbol-color: rgb(94, 94, 94);
+  --symbol-color: rgb(119, 119, 119);
   --win-color: rgb(230, 104, 104);
   --slider-thumb-size: 20px;
   --slider-thumb-bg: white;
@@ -139,6 +139,11 @@ button:hover {
   width: calc((var(--slider-thumb-size) + var(--slider-border)) * 2);
   height: calc(var(--slider-border) * 2 + var(--slider-thumb-size));
 }
+
+.switch:hover{
+  cursor: pointer;
+}
+
 /* hide html checkbox */
 .switch input{
   opacity: 0;
@@ -185,7 +190,7 @@ input:checked + .slider::before{
   display: flex;
   justify-content: start;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
   width: fit-content;
 }
 
@@ -196,12 +201,16 @@ input:checked + .slider::before{
   transition: .5s;
 }
 
+.toggle-label.ai{
+  color: var(--slider-active-bg);
+}
+
 .bottom-section{
   display: flex;
   flex-direction: column;
   /* justify-content: space-between; */
   align-items: center;
-  margin-top: 2rem;
+  margin-top: 1rem;
   width: calc(var(--cell-width) * 3 + var(--board-gap) * 2);
 }
 
@@ -223,8 +232,31 @@ place-content: center;
 .btn-section{
   width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   margin-top: .7rem;
+}
+
+footer{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-family: 'Ubuntu', sans-serif;
+  color: var(--symbol-color);
+  padding-bottom: .5rem;
+  font-weight: 700;
+  font-size: 1rem;
+}
+footer a i{
+  margin-left: .5rem;
+  font-size: 1.5rem;
+}
+
+footer a{
+  color: var(--slider-active-bg);
 }
 
 /* *{
