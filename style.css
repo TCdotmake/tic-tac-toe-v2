@@ -98,6 +98,11 @@ button:hover {
   background: var(--win-color);
 }
 
+.dropOff {
+  animation: dropOff 1.5s;
+  animation-fill-mode: forwards;
+}
+
 @keyframes appear {
   0% {
     opacity: 0;
@@ -106,5 +111,15 @@ button:hover {
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes dropOff {
+  10% {
+    transform: translateY(calc(var(--symbol-size) - 30px) * -1);
+  }
+  100% {
+    transform: translateY(900px);
+    opacity: 0;
   }
 }

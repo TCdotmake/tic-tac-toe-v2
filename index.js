@@ -2,13 +2,20 @@ function app() {
   const setupFunctions = {
     initialSetup: function () {
       this.generateWinCondition();
-      this.newGame();
+      this.setupGame();
     },
-    newGame: function () {
+    setupGame: function () {
       this.setupCells();
       this.setupBoardData();
       this.active = true;
       this.firstTurn();
+    },
+
+    newGame: function () {
+      this.dropOffAnimation();
+      setTimeout(() => {
+        this.setupGame();
+      }, 1000);
     },
     clearCells: function () {
       const gameBoard = document.getElementById("gameBoard");
@@ -227,10 +234,6 @@ function app() {
       token.classList.add("symbolWrapper");
       let innerHTML;
       if (this.currentToken == "1") {
-        innerHTML = `<div class="xSymbol">
-        <div class="bar deg45"></div>
-        <div class="bar deg315"></div>
-      </div>`;
         let x = document.createElement("div");
         x.classList.add("xSymbol");
         let bar1 = document.createElement("div");
@@ -243,11 +246,6 @@ function app() {
         x.insertAdjacentElement("beforeend", bar2);
         token.insertAdjacentElement("beforeend", x);
       } else {
-        innerHTML = `<div class="circleSymbol">
-        <div class="outer circle">
-          <div class="inner circle"></div>
-        </div>
-      </div>`;
         let o = document.createElement("div");
         o.classList.add("circleSymbol");
         let outer = document.createElement("div");
@@ -260,7 +258,7 @@ function app() {
         o.insertAdjacentElement("beforeend", outer);
         token.insertAdjacentElement("beforeend", o);
       }
-      // token.innerHTML = innerHTML;
+
       return token;
     },
     getWinArr: function () {
@@ -279,11 +277,22 @@ function app() {
     showWinCells: function () {
       let winCells = this.getWinArr();
       const cells = document.querySelectorAll(".cell");
+      let delay = 0;
       for (index of winCells) {
         const children = cells[index].firstChild.firstChild.children;
         for (let child of children) {
+          // child.style.transitionDelay = `${delay * 100}ms`;
           child.classList.add("win");
         }
+        delay++;
+      }
+    },
+    dropOffAnimation: function () {
+      const cells = document.querySelectorAll(".symbolWrapper");
+      let delay = 0;
+      for (icon of cells) {
+        icon.style.animationDelay = `${delay++ * 100}ms`;
+        icon.classList.add("dropOff");
       }
     },
   };
@@ -310,17 +319,17 @@ function app() {
   })();
   ticTacToe.initialSetup();
 
-  // const aiBtn2 = document.getElementById("aiToggle2");
-  // aiBtn2.addEventListener("click", () => {
-  //   ticTacToe.toggleAI(2);
-  // });
-  // const aiBtn1 = document.getElementById("aiToggle1");
-  // aiBtn1.addEventListener("click", () => {
-  //   ticTacToe.toggleAI(1);
-  // });
-  // const ngBtn = document.getElementById("newGame");
-  // ngBtn.addEventListener("click", () => {
-  //   ticTacToe.newGame();
-  // });
+  const aiBtn2 = document.getElementById("aiToggle2");
+  aiBtn2.addEventListener("click", () => {
+    ticTacToe.toggleAI(2);
+  });
+  const aiBtn1 = document.getElementById("aiToggle1");
+  aiBtn1.addEventListener("click", () => {
+    ticTacToe.toggleAI(1);
+  });
+  const ngBtn = document.getElementById("newGame");
+  ngBtn.addEventListener("click", () => {
+    ticTacToe.newGame();
+  });
 }
 app();
